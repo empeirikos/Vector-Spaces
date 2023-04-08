@@ -40,94 +40,129 @@
 \DeclareMathOperator{\nspace}{null}
 \DeclareMathOperator{\Span}{Span}
 \newcommand{\lmap}[2]{\mathcal{L}(#1,#2)}
-\newtheoremstyle{solve}% name of the style to be used
-  {10pt}% measure of space to leave above the theorem. E.g.: 3pt
-  {10pt}% measure of space to leave below the theorem. E.g.: 3pt
-  {}% name of font to use in the body of the theorem
-  {}% measure of space to indent
-  {\bfseries}% name of head font
-  {:}% punctuation between head and body
-  {5pt}% space after theorem head; " " = normal interword space
-  {}
+%\newtheoremstyle{solve}% name of the style to be used
+%  {10pt}% measure of space to leave above the theorem. E.g.: 3pt
+%  {10pt}% measure of space to leave below the theorem. E.g.: 3pt
+%  {}% name of font to use in the body of the theorem
+%  {}% measure of space to indent
+%  {\bfseries}% name of head font
+%  {:}% punctuation between head and body
+%  {5pt}% space after theorem head; " " = normal interword space
+%  {}
 
-\theoremstyle{solve}
-\newtheorem{problem}{Problem}
-\newtheorem*{solution}{Solution}
-\title{Vector Spaces}
-\author{tedmavro }
-\date{April 2023}
+%\theoremstyle{solve}
+%\newtheorem{problem}{Problem}
+%\newtheorem*{solution}{Solution}
+\newcounter{problem}
+\NewDocumentEnvironment{problem}{o m +m}
+{ % beginning code
+    \refstepcounter{problem}
+    \IfNoValueTF{#1}
+    { % optional is empty
+        \par\medskip\noindent \textbf{Problem \theproblem}: #2
+        \vspace{-1ex}\newline\rule{\textwidth}{0.5pt}
+        \newline\textbf{Solution:} #3
+        \vspace{-1ex}\newline\rule{\textwidth}{0.5pt}
+    }
+    { % optional has value
+        \par\medskip\noindent \textbf{Problem \theproblem} (#1): #2
+        \vspace{-1ex}\newline\rule{\textwidth}{0.5pt}
+        \newline\textbf{Solution:} #3
+        \vspace{-1ex}\newline\rule{\textwidth}{0.5pt}
+    }
+}
+{ % end code
+    \medskip
+}
+
+\title{Linear Algebra Done Right: \\ answers to selected exercises}
+\author{ }
+\date{}
 
 \begin{document}
 
 \maketitle
 
-\section{Answers to selected exercises}
+\section*{Chapter 3}
 
-\begin{problem}
-Suppose $W$ is finite dimensional and $T \in  \lmap{V}{W}$. Prove that $T$ is injective if and only if there exists $S \in \lmap{W}{V}$ such that $ST$ is the identity map on $V$.
+\begin{problem}[3.B.20]
+    {
+        Suppose $W$ is finite dimensional and $T \in  \lmap{V}{W}$. Prove that $T$ is injective 
+        if and only if there exists $S \in \lmap{W}{V}$ such that $ST$ is the identity map on $V$.
+    }
+    {
+        If $ST:\lmap{V}{V}$ is the identity map then for any $v\in V$, $STv=v$. 
+        This can be rewritten as $S(Tv)$; now assume that $T$ is not injective in which case for $v_1\neq v_2$, 
+        $Tv_1=Tv_2=w$. Since $STv_1 \neq STv_2$ we must have
+        $Sw \neq Sw$ which is not possible. Therefore $T$ must be injective. 
+        
+        Next assume that $T$ is injective and define a linear map $S=\lmap{W}{V}$ with the property 
+        $Sw=v$ if $Tv=w$. This map is defined since $T$ is injective and there is a unique $v$ for which $Tv=w$. Therefore 
+        $STv=v$ and $ST$ is the identity map on $V$. 
+    }
 \end{problem}
-\begin{solution}
-If $ST:\lmap{V}{V}$ is the identity map then for any $v\in V$
-, $STv=v$. This can be rewritten as $S(Tv)$; now assume that $T$ is not injective in which case for $v_1\neq v_2$, 
-$Tv_1=Tv_2=w$. Since $STv_1 \neq STv_2$ we must have
-$Sw \neq Sw$ which is not possible. Therefore $T$ must be injective.
 
-\noindent Next assume that $T$ is injective and define a linear map $S=\lmap{W}{V}$ with the property 
-$Sw=v$ if $Tv=w$. This map is defined since $T$ is injective and there is a unique $v$ for which $Tv=w$. Therefore 
-$STv=v$ and $ST$ is the identity map on $V$.
-\end{solution}
-
-\begin{problem}
-Suppose $V$ is finite dimensional and $T \in  \lmap{V}{W}$. Prove that $T$ is surjective if and only if there exists $S \in \lmap{W}{V}$ such that $TS$ is the identity map on $W$.
-\end{problem}
-\begin{solution}
+\begin{problem}[3.B.21]
+{
+    Suppose $V$ is finite dimensional and $T \in  \lmap{V}{W}$. Prove that $T$ is surjective if and only if there 
+    exists $S \in \lmap{W}{V}$ such that $TS$ is the identity map on $W$.
+}
+{
 If $TS \in \lmap{W}{W}$ is the identity map then for all $w \in W$, $TSw=w$. For the identity map to exist $S$ must map all $w\in W$ to some $\range{S}\subseteq V$ and then $T$ must map
 $\range S$ to the whole of $W$. But if $T$ is not surjective,
 $\range{T}\subset W$ and therefore for any $\range{S}$ it is not possible for $\range{TS}=W$. Therefore $T$ must be surjective.
 
-\noindent If $T$ is surjective then $\range{T}=W$; therefore
+If $T$ is surjective then $\range{T}=W$; therefore
 for any $w\in W$ there is one or more $v\in V$ such that $Tv=w$. Define a map $S:\lmap{W}{V}$ which maps $w\in W$ to
 $v\in V$ such that $Tv=w$ (if more than one $v$ have this property select one and keep this choice fixed). So if we start with $w\in W$ then we can map it to $v=Sw$. From the definition of $S$ then it follows that $Tv=w$ or $TSw=w$ and therefore $TS$ is the identity map. 
-\end{solution}
-
-\begin{problem}
-    Suppose $V$ is finite dimensional and $T_1,T_2 \in \lmap{V}{W}$. Prove that $\range T_1 \subset \range T_2$ if and only if there exists $S \in \lmap{V}{V}$ such that $T_1=T_2 S$.
+}
 \end{problem}
-\begin{solution}
-    If $\range T_1 \subset \range T_2$ then if $w=T_1v$
-    there exists $v'\in V$ for which $w=T_2 v'$. We can define
-    $S\in \lmap{V}{V}$ such that given $v \in \range T_1$
-    we find $v' \in \range T_2$ such that $T_1v=T_2v'$. Therefore if $v'=Sv$ then $T_2v'=T_2Sv$ and since $T_1v=T_2v'$ we have $T_1v=T_2Sv$ i.e. $T_1=T_2S$.
 
-\noindent Next assume that there exists $S \in \lmap{V}{V}$ such that $T_1=T_2 S$. If $w \in \range T_1$ we have
+\newpage
+
+\begin{problem}[3.B.24]
+    {
+            Suppose $W$ is finite-dimensional and $T_1,T_2 \in \lmap{V}{W}$. Prove that $\nspace T_1 \subset \nspace T_2$ if and only if there exists $S \in \lmap{W}{W}$ such that $T_2=ST_1$.
+    }
+    {
+        Start with $\nspace T_1 \subset \nspace T_2$; this means that for some $v \in \nspace T_2$, $T_1v \neq 0$. We can define a linear map $S\in \lmap{W}{W}$  with the following properties: if $T_1v=T_2v=0$ then $ST_1v=S0=0=T_2v$ which is a property of all linear maps; if $T_2v=0$ and $T_1v\neq 0$ then $T_1v \in \nspace S$ and
+        $S(T_1v)=0=T_2v$; in all other cases $S$ maps $T_1v$ to $T_2v$, i.e. $ST_1v=T_2v$. Therefore we can define a linear map with the property $ST_1=T_2$.
+        
+        Next assume the existence of a linear map
+        $S \in \lmap{W}{W}$ such that $T_2=ST_1$. For 
+        $v \in \nspace T_1$ we have $ST_1v=0=T_2v$ and therefore
+        $v \in \nspace T_2$. For $v \in \nspace T_2$ there is no linear map $S' \in \lmap{W}{W}$ such that $T_1=S'T_2$.
+        Therefore if $T_2v=0$ it is not always the case that
+        $T_1v=0$. Therefore $\nspace T_1 \subset \nspace T_2$.
+    }
+\end{problem}
+    
+\begin{problem}[3.B.25]
+{    
+    Suppose $V$ is finite dimensional and $T_1,T_2 \in \lmap{V}{W}$. Prove that $\range T_1 \subset \range T_2$ if and only if there exists $S \in \lmap{V}{V}$ such that $T_1=T_2 S$.
+}
+{
+If $\range T_1 \subset \range T_2$ then if $w=T_1v$
+there exists $v'\in V$ for which $w=T_2 v'$. We can define
+$S\in \lmap{V}{V}$ such that given $v \in \range T_1$
+we find $v' \in \range T_2$ such that $T_1v=T_2v'$. Therefore if $v'=Sv$ then $T_2v'=T_2Sv$ and since $T_1v=T_2v'$ we have $T_1v=T_2Sv$ i.e. $T_1=T_2S$.
+
+Next assume that there exists $S \in \lmap{V}{V}$ such that $T_1=T_2 S$. If $w \in \range T_1$ we have
 $w=T_1v=T_2Sv$ and since $Sv \in V$, $T_2v \in \range T_2$,
 $w \in \range T_2$. If $w \in \range T_2$ we have $w=T_2v$;
 however there is no linear map $S'\in \lmap{V}{V}$ for which $T_2=T_1S'$ and therefore $w \in \range T_1$. Therefore it is not always true that if $w \in \range T_2$ it is also the case that $w \in \range T_1$ and therefore $\range T_1 \subset \range T_2$.
-\end{solution}
-
-\begin{problem}
-    Suppose $W$ is finite-dimensional and $T_1,T_2 \in \lmap{V}{W}$. Prove that $\nspace T_1 \subset \nspace T_2$ if and only if there exists $S \in \lmap{W}{W}$ such that $T_2=ST_1$.
+}
 \end{problem}
-\begin{solution}
-    Start with $\nspace T_1 \subset \nspace T_2$; this means that for some $v \in \nspace T_2$, $T_1v \neq 0$. We can define a linear map $S\in \lmap{W}{W}$  with the following properties: if $T_1v=T_2v=0$ then $ST_1v=S0=0=T_2v$ which is a property of all linear maps; if $T_2v=0$ and $T_1v\neq 0$ then $T_1v \in \nspace S$ and
-    $S(T_1v)=0=T_2v$; in all other cases $S$ maps $T_1v$ to $T_2v$, i.e. $ST_1v=T_2v$. Therefore we can define a linear map with the property $ST_1=T_2$.
 
-    \noindent Next assume the existence of a linear map
-    $S \in \lmap{W}{W}$ such that $T_2=ST_1$. For 
-    $v \in \nspace T_1$ we have $ST_1v=0=T_2v$ and therefore
-    $v \in \nspace T_2$. For $v \in \nspace T_2$ there is no linear map $S' \in \lmap{W}{W}$ such that $T_1=S'T_2$.
-    Therefore if $T_2v=0$ it is not always the case that
-    $T_1v=0$. Therefore $\nspace T_1 \subset \nspace T_2$.
-\end{solution}
-
-\begin{problem}
+\begin{problem}[3.B.29]
+{
     Suppose $\phi\in\lmap{V}{\mathbb{F}}$. Suppose $u\in V$
     is not in $\nspace \phi$. Prove that,
     \[
         V = \nspace \phi \oplus \{au: a \in \mathbb{F} \}
     \]
-\end{problem}   
-\begin{solution}
+}
+{    
     To simplify the expressions denote
     $\{au: a \in \mathbb{F} \}$ as $U$.
     First we must prove that,
@@ -182,28 +217,30 @@ however there is no linear map $S'\in \lmap{V}{V}$ for which $T_2=T_1S'$ and the
     $u^n \neq 0$ and $au=0$ only for $a=0$). Then any $v \in V$ can be expressed as the
     sum of $w \in \nspace \phi$ and $au$ where $u \in U$ 
     and $a \in \mathbb{F}$.
-\end{solution}
-\begin{problem}
+}
+\end{problem}
+\begin{problem}[3.B.30]
+{    
     Suppose $\phi_1$ and $\phi_2$ are linear maps from
     $V$ to $\mathbb{F}$ that have the same null space.
     Show that there exists a constant $c\in \mathbb{F}$
     such that $\phi_1=c\phi_2$.
-\end{problem}
-\begin{solution}
+}
+{
     Denote
     $\nspace \phi_1=\nspace \phi_2$ as $N$. For any linear map
     $\dim V = \dim \nspace + \dim \range$ so 
     $\dim V - \dim N = \dim \range \phi_1 \leq 
     \dim \mathbb{F}=1$ (same is true for $\phi_2$).
     If $\dim V=n$ then $\dim V - \dim N \leq 1$ or
-    $n-1 \leq \dim N$.
+    $n-1 \leq \dim N$.    
     
-    \noindent If $\dim N = n$ then $\dim \range \phi_1 = 0$ (same is true for $\phi_2$) and therefore
+    If $\dim N = n$ then $\dim \range \phi_1 = 0$ (same is true for $\phi_2$) and therefore
     $\range \phi_1 = \range \phi_2=\{0\}$. This is only possible if $\phi_1v=\phi_2v=0v=0$ for all $v \in V$.
     So if $\dim \nspace \phi_1 = \dim \nspace \phi_2=n$ for any
     $c \in \mathbb{F}$, $\phi_1=c\phi_2$. 
-
-    \noindent If $\dim N=n-1$ then $\dim \range \phi_1 = \dim \range \phi_2=1$
+    
+    If $\dim N=n-1$ then $\dim \range \phi_1 = \dim \range \phi_2=1$
     so for $v \notin N$,
     \begin{align*}
     v & = v^1 e_1 + \ldots + v^n e_n \\
@@ -216,13 +253,16 @@ however there is no linear map $S'\in \lmap{V}{V}$ for which $T_2=T_1S'$ and the
     \phi_1 v = v^n (c\phi_2 e_n) = c \phi_2 v
     \]
     and therefore $\phi_1=c\phi_2$.
-\end{solution}
-\begin{problem}
+}
+\end{problem}
+\newpage
+\begin{problem}[3.B.31]
+{
     Give an example of two linear maps $T_1$ and $T_2$ from
     $\mathbb{R}^5$ to $\mathbb{R}^2$ that have the same null space
     but are such that $T_1$ is not a scalar multiple of $T_2$.
-\end{problem}
-\begin{solution}
+}
+{    
     Consider,
     \[
     A = \mqty[ A_1 & A_2 & A_3 & A_4 & A_5 ]
@@ -284,7 +324,7 @@ however there is no linear map $S'\in \lmap{V}{V}$ for which $T_2=T_1S'$ and the
     Since the three vectors in the last equation are independent
     they form the basis of $\nspace A$.
 
-    \noindent Now define another $5 \times 2$ matrix,
+    Now define another $5 \times 2$ matrix,
     \[
     B = \mqty[ B_1 & B_2 & B_3 & B_4 & B_5 ]
     \]  
@@ -338,103 +378,105 @@ however there is no linear map $S'\in \lmap{V}{V}$ for which $T_2=T_1S'$ and the
     )    
     \right\}
     \]
-\end{solution}
-\vspace{1cm}
-\noindent\rule{\textwidth}{0.5pt}
-\par\noindent Suppose $T \in \lmap{V}{W}$ and $v_1,\ldots,v_n$
-is a basis of $V$ and $w_1,\ldots,w_m$ is a  basis of $W$.
-A vector $x \in V$ ,
-\[
-x=x^1 v_1 + \ldots + x^n v_n 
-\]
-is mapped to a vector $y \in W$ using a $m \times n$ matrix $A$ as,
-\[
-\mqty(
-y^1 \\
-\vdots \\
-y^r \\
-\vdots \\
-y^m
-)
-=
-x^1 
-\mqty(
-A_{1,1} \\
-\vdots \\
-A_{r,1} \\
-\vdots \\
-A_{m,1}
-)
-+ \ldots +
-x^n 
-\mqty(
-A_{1,n} \\
-\vdots \\
-A_{r,n} \\
-\vdots \\
-A_{m,n}
-)
-\]
-and therefore,
-\begin{equation}    
-y^r = x^1 A_{r,1} + \ldots + x^n A_{r,n}  = \sum_{i=1}^n A_{r,i} x^i
-\label{first expansion}
-\end{equation}
-We also have,
-\begin{equation}
-y=Tx=x^1Tv_1+\ldots+x^nTv_n \label{second expansion}
-\end{equation}
-The linear map $T$ transforms each basis vector $v_k$ to a linear combination of basis vectors of $W$,
-\[
-Tv_k = C_{1,k} w_1+\ldots+C_{m,k} w_m = \sum_{j=1}^m C_{j,k} w_j \label{basis_to_basis}
-\]
-Combining (\ref{first expansion}) and (\ref{second expansion}) we get,
-\begin{equation}
-y = x^1 \sum_{j=1}^m C_{j,1} w_j+\ldots + x^n \sum_{j=1}^m C_{j,n} w_j    
-\label{third expansion}
-\end{equation}
-Since $y\in W$,
-\begin{equation}
-    y=y^1 w_1 + \ldots + y^m w_m
-    \label{w expansion}
-\end{equation}
-it follows from (\ref{third expansion}) that,
-\begin{equation}
-    y^r = \sum_{i=1}^n C_{r,i}x^i
-    \label{yr in terms of xi}
-\end{equation}
-If we compare (\ref{first expansion}) and (\ref{yr in terms of xi})
-we must have $C_{r,p}=A_{r,p}$. Therefore,
-\begin{equation}
-Tv_k = A_{1,k} w_1+\ldots+A_{m,k} w_m  
-= \sum_{i=1}^m A_{i,k} w_i
-\label{definition MT}
-\end{equation}
-i.e. the linear map $T$ transforms the k\textsuperscript{th} basis vector of $V$ into a linear combination of
-the basis vectors of $W$ whose coefficients are the elements of the k\textsuperscript{th} column of matrix $A=\mathcal{M}(T)$.
-\newline\noindent Now suppose we want to use a new
-set of basis vectors ${\hat w}_1,\ldots,{\hat w}_m$.
-We can express,
-\begin{equation}
-    w_r = \sum_{j=1}^m C_{j,r} {\hat w}_j
-    \label{new basis vectors}
-\end{equation}
-Substituting (\ref{new basis vectors}) into
-(\ref{definition MT}) we get,
-\begin{equation}
-    Tv_k = \sum_{i=1}^m A_{i,k} w_i
-    \qty(\sum_{j=1}^m C_{j,i} {\hat w}_j)
-    =\sum_{j=1}^m \qty(\sum_{i=1}^m C_{j,i}A_{i,k})
-    {\hat w}_j
-\end{equation}
-Therefore starting from (\ref{new basis vectors})
-we can derive a matrix $B=CA$ such that,
-\begin{equation}
-    Tv_k = \sum_{j=1}^m B_{j,k} {\hat w}_j 
-\end{equation}
-\newline\noindent\rule{\textwidth}{0.5pt}
-\vspace{1cm}
-\begin{problem}
+}
+\end{problem}
+%\vspace{1cm}
+%\noindent\rule{\textwidth}{0.5pt}
+%\par\noindent Suppose $T \in \lmap{V}{W}$ and $v_1,\ldots,v_n$
+%is a basis of $V$ and $w_1,\ldots,w_m$ is a  basis of $W$.
+%A vector $x \in V$ ,
+%\[
+%x=x^1 v_1 + \ldots + x^n v_n 
+%\]
+%is mapped to a vector $y \in W$ using a $m \times n$ matrix $A$ as,
+%\[
+%\mqty(
+%y^1 \\
+%\vdots \\
+%y^r \\
+%\vdots \\
+%y^m
+%)
+%=
+%x^1 
+%\mqty(
+%A_{1,1} \\
+%\vdots \\
+%A_{r,1} \\
+%\vdots \\
+%A_{m,1}
+%)
+%+ \ldots +
+%x^n 
+%\mqty(
+%A_{1,n} \\
+%\vdots \\
+%A_{r,n} \\
+%\vdots \\
+%A_{m,n}
+%)
+%\]
+%and therefore,
+%\begin{equation}    
+%y^r = x^1 A_{r,1} + \ldots + x^n A_{r,n}  = \sum_{i=1}^n A_{r,i} x^i
+%\label{first expansion}
+%\end{equation}
+%We also have,
+%\begin{equation}
+%y=Tx=x^1Tv_1+\ldots+x^nTv_n \label{second expansion}
+%\end{equation}
+%The linear map $T$ transforms each basis vector $v_k$ to a linear combination of basis vectors of $W$,
+%\[
+%Tv_k = C_{1,k} w_1+\ldots+C_{m,k} w_m = \sum_{j=1}^m C_{j,k} w_j \label{basis_to_basis}
+%\]
+%Combining (\ref{first expansion}) and (\ref{second expansion}) we get,
+%\begin{equation}
+%y = x^1 \sum_{j=1}^m C_{j,1} w_j+\ldots + x^n \sum_{j=1}^m C_{j,n} w_j    
+%\label{third expansion}
+%\end{equation}
+%Since $y\in W$,
+%\begin{equation}
+%    y=y^1 w_1 + \ldots + y^m w_m
+%    \label{w expansion}
+%\end{equation}
+%it follows from (\ref{third expansion}) that,
+%\begin{equation}
+%    y^r = \sum_{i=1}^n C_{r,i}x^i
+%    \label{yr in terms of xi}
+%\end{equation}
+%If we compare (\ref{first expansion}) and (\ref{yr in terms of xi})
+%we must have $C_{r,p}=A_{r,p}$. Therefore,
+%\begin{equation}
+%Tv_k = A_{1,k} w_1+\ldots+A_{m,k} w_m  
+%= \sum_{i=1}^m A_{i,k} w_i
+%\label{definition MT}
+%\end{equation}
+%i.e. the linear map $T$ transforms the k\textsuperscript{th} basis vector of $V$ into a linear combination of
+%the basis vectors of $W$ whose coefficients are the elements of the k\textsuperscript{th} column of matrix $A=\mathcal{M}(T)$.
+%\newline\noindent Now suppose we want to use a new
+%set of basis vectors ${\hat w}_1,\ldots,{\hat w}_m$.
+%We can express,
+%\begin{equation}
+%    w_r = \sum_{j=1}^m C_{j,r} {\hat w}_j
+%    \label{new basis vectors}
+%\end{equation}
+%Substituting (\ref{new basis vectors}) into
+%(\ref{definition MT}) we get,
+%\begin{equation}
+%    Tv_k = \sum_{i=1}^m A_{i,k} w_i
+%    \qty(\sum_{j=1}^m C_{j,i} {\hat w}_j)
+%    =\sum_{j=1}^m \qty(\sum_{i=1}^m C_{j,i}A_{i,k})
+%    {\hat w}_j
+%\end{equation}
+%Therefore starting from (\ref{new basis vectors})
+%we can derive a matrix $B=CA$ such that,
+%\begin{equation}
+%    Tv_k = \sum_{j=1}^m B_{j,k} {\hat w}_j 
+%\end{equation}
+%\newline\noindent\rule{\textwidth}{0.5pt}
+%\vspace{1cm}
+\begin{problem}[3.C.2]
+{
     Suppose $D \in \lmap{\mathcal{P}_3(\mathbb{R})}{\mathcal{P}_2(\mathbb{R})}$ is the differentiation map defined by
     $Dp=p'$. Find a basis of $\mathcal{P}_3(\mathbb{R})$ and a basis of
     $\mathcal{P}_2(\mathbb{R})$ such that the matrix of $D$ with
@@ -446,8 +488,8 @@ we can derive a matrix $B=CA$ such that,
         0 & 0 & 1 & 0 \\        
         ]
     \]
-\end{problem}
-\begin{solution}
+}
+{
     If we express,
     \[
     \mathcal{P}_3(x)=\sum_{i=1}^4 b_i f_i(x)
@@ -487,15 +529,17 @@ we can derive a matrix $B=CA$ such that,
         ] 
      \mqty(a_3 \\ a_2 \\ a_1 \\ a_0)   
     \]
-\end{solution}
-\begin{problem}
+}
+\end{problem}
+\begin{problem}[3.C.3]
+{
     Suppose $V$ and $W$ are finite-dimensional and $T \in \lmap{V}{W}$.
     Prove that there exist a basis of $V$ and $W$ such that with respect
     to these bases, all entries of $\mathcal{M}(T)$ are 0 except that the entries in row $j$, column $j$, equal $1$ for $1\leq j\leq \dim \range T$. 
-\end{problem}
-\begin{solution}Denote $\dim V$ as $n$ and                  $\dim\nspace T$ as r;
-    from the Fundamental
-    Theorem of Linear Maps we have,
+}
+{
+    Denote $\dim V$ as $n$ and $\dim\nspace T$ as r;
+    from the Fundamental Theorem of Linear Maps we have,
     $\dim \range T = n-r$, 
      $\range T=\Span\{e_{1},\ldots,e_{n-r} \}$ and 
      $\nspace T = \Span\{e_{n-r+1},\ldots,e_n\}$. 
@@ -536,14 +580,14 @@ we can derive a matrix $B=CA$ such that,
     and $A_{k,k'}=0$ for $k\neq k'$.
     Therefore $A$ is,
      \[
-    %\mqty(w^1 \\ \vdots \\ w^{n-r})=
+    \mqty(w^1 \\ \vdots \\ w^{n-r})=
     \mqty[
     1 & 0 & \cdots & 0 & 0 & 0 & \cdots & 0  \\
     0 & 1 & \cdots & 0 & 0 & 0 &\cdots & 0 \\
     \vdots & \vdots & \ddots & \vdots & \vdots & \vdots & \ddots & \vdots \\
     0 & 0 & \cdots & 1 & 0 & 0 &  \cdots & 0
     ]
-    %\mqty(v^1 \\ \vdots \\ v^n)
+    \mqty(v^1 \\ \vdots \\ v^n)
     \]   
     or,
     \[
@@ -551,25 +595,31 @@ we can derive a matrix $B=CA$ such that,
     \]
     where $I$ is the $n-r \times n-r$ identity matrix
     and $O$ is the $n-r \times r$ zero matrix.
-\end{solution}
-\begin{problem}
+}
+\end{problem}
+
+\pagebreak
+
+\begin{problem}[3.C.4]
+{
     Suppose $v_1,\ldots,v_m$ is a basis of $V$ and $W$ is finite-dimensional.
     Suppose $T \in \lmap{V}{W}$. Prove there exists a basis $w_1,\ldots,w_n$
     of $W$ such that all the entries in the first column of $\mathcal{M}(T)$
     (with respect to the bases $v_1,\ldots,v_m$ and $w_1,\ldots,w_n$) are 0
     except from possibly a 1 in the first row, first column.
-\end{problem}
-\begin{solution}
+}
+{
 The format of $\mathcal{M}(T)$ is as follows,
 \[
 \begin{tikzpicture}[baseline={([yshift=-1.5ex]current bounding box.center)}]
-\matrix(m) [matrix of nodes, row sep=1ex, column sep=3ex, nodes in empty cells, nodes={shape=rectangle,minimum height=5ex, anchor=center},] {
-       &  $v_1$    & $\cdots$ & $v_j$     & $\cdots$ & $v_m$ \\
- $w_1$ & $A_{1,1}$ & $\cdots$ & $A_{1,j}$ & $\cdots$ & $A_{1,m}$ \\
- $\vdots$ & $\vdots$  & $\ddots$ & $\vdots$  & $\ddots$ & $\vdots$ \\
- $w_i$ & $A_{i,1}$ & $\cdots$ & $A_{i,j}$ & $\cdots$ & $A_{i,m}$ \\
- $\vdots$ & $\vdots$  & $\ddots$ & $\vdots$  & $\ddots$ & $\vdots$ \\
- $w_n$ & $A_{n,1}$ & $\cdots$ & $A_{n,j}$ & $\cdots$ & $A_{n,m}$ \\
+\matrix(m) [matrix of nodes, row sep=1ex, column sep=3ex, nodes in empty cells, nodes={shape=rectangle,minimum height=5ex, anchor=center},
+            ampersand replacement=\&,] {
+            \&  $v_1$    \& $\cdots$ \& $v_j$     \& $\cdots$ \& $v_m$ \\
+ $w_1$      \& $A_{1,1}$ \& $\cdots$ \& $A_{1,j}$ \& $\cdots$ \& $A_{1,m}$ \\
+ $\vdots$   \& $\vdots$  \& $\ddots$ \& $\vdots$  \& $\ddots$ \& $\vdots$ \\
+ $w_i$      \& $A_{i,1}$ \& $\cdots$ \& $A_{i,j}$ \& $\cdots$ \& $A_{i,m}$ \\
+ $\vdots$   \& $\vdots$  \& $\ddots$ \& $\vdots$  \& $\ddots$ \& $\vdots$ \\
+ $w_n$      \& $A_{n,1}$ \& $\cdots$ \& $A_{n,j}$ \& $\cdots$ \& $A_{n,m}$ \\
 };
 \node[fit= (m-2-2.north west) (m-6-6.south east), left delimiter={[}, right delimiter={]},inner sep=0ex] {};
 \end{tikzpicture}
@@ -582,13 +632,14 @@ We want a basis ${\hat w}_1,\ldots,{\hat w}_n$ for which the
 linear map $T':V\rightarrow {\hat W}$,
 \[
 \begin{tikzpicture}[baseline={([yshift=-0ex]current bounding box.center)}]
-\matrix(m) [matrix of nodes, row sep=1ex, column sep=3ex, nodes in empty cells, nodes={shape=rectangle,minimum height=5ex, anchor=center},] {
-       &  $v_1$    & $\cdots$ & $v_j$     & $\cdots$ & $v_m$ \\
- ${\hat w}_1$ & $1 \text{ or } 0$ & $\cdots$ & $B_{1,j}$ & $\cdots$ & $B_{1,m}$ \\
- $\vdots$ & $\vdots$  & $\ddots$ & $\vdots$  & $\ddots$ & $\vdots$ \\
- ${\hat w}_i$ & $0$ & $\cdots$ & $B_{i,j}$ & $\cdots$ & $B_{i,m}$ \\
- $\vdots$ & $\vdots$  & $\ddots$ & $\vdots$  & $\ddots$ & $\vdots$ \\
- ${\hat w}_n$ & $0$ & $\cdots$ & $B_{n,j}$ & $\cdots$ & $B_{n,m}$ \\
+\matrix(m) [matrix of nodes, row sep=1ex, column sep=3ex, nodes in empty cells, nodes={shape=rectangle,minimum height=5ex, anchor=center},
+            ampersand replacement=\&,] {
+                \&  $v_1$            \& $\cdots$ \& $v_j$     \& $\cdots$ \& $v_m$ \\
+ ${\hat w}_1$   \& $1 \text{ or } 0$ \& $\cdots$ \& $B_{1,j}$ \& $\cdots$ \& $B_{1,m}$ \\
+ $\vdots$       \& $\vdots$          \& $\ddots$ \& $\vdots$  \& $\ddots$ \& $\vdots$ \\
+ ${\hat w}_i$   \& $0$               \& $\cdots$ \& $B_{i,j}$ \& $\cdots$ \& $B_{i,m}$ \\
+ $\vdots$       \& $\vdots$          \& $\ddots$ \& $\vdots$  \& $\ddots$ \& $\vdots$ \\
+ ${\hat w}_n$   \& $0$               \& $\cdots$ \& $B_{n,j}$ \& $\cdots$ \& $B_{n,m}$ \\
 };
 \node[fit= (m-2-2.north west) (m-6-6.south east), left delimiter={[}, right delimiter={]},inner sep=0ex] {};
 \end{tikzpicture}
@@ -675,14 +726,15 @@ It is easy to show that,
 \[
 C^{-1}=
 \begin{tikzpicture}[baseline={([yshift=-3.5ex]current bounding box.center)}]
-\matrix(m) [matrix of nodes, row sep=1ex, column sep=3ex, nodes in empty cells, nodes={shape=rectangle,minimum height=5ex, anchor=center},] {
-       &  ${\hat w}_1$    & ${\hat w}_2$ & ${\hat w}_3$ & ${\hat w}_4$ & $\cdots$ & ${\hat w}_n$ \\
- $w_1$ & $A_{1,1}$ & $0$ & $0$ & $0$ &$\cdots$ & $0$ \\
- $w_2$ & $A_{2,1}$ & $-A_{2,1}$ & $0$ & $0$ &$\cdots$ & $0$ \\
- $w_3$ & $A_{3,1}$ & $0$ & $-A_{3,1}$ & $0$ &$\cdots$ & $0$ \\
-  $w_4$ & $A_{4,1}$ & $0$ & $0$ & $-A_{4,1}$ &$\cdots$ & $0$ \\
- $\vdots$ & $\vdots$  & $\vdots$ & $\vdots$  & $\ddots$ & $\vdots$ \\
-  $w_n$ & $A_{n,1}$ & $0$ & $0$ & $0$ &$\cdots$ & $-A_{n,1}$ \\
+\matrix(m) [matrix of nodes, row sep=1ex, column sep=3ex, nodes in empty cells, nodes={shape=rectangle,minimum height=5ex, anchor=center},
+            ampersand replacement=\&,] {
+                \&  ${\hat w}_1$     \& ${\hat w}_2$  \& ${\hat w}_3$  \& ${\hat w}_4$  \& $\cdots$  \& ${\hat w}_n$ \\
+    $w_1$       \& $A_{1,1}$         \& $0$           \& $0$           \& $0$           \&$\cdots$   \& $0$ \\
+    $w_2$       \& $A_{2,1}$         \& $-A_{2,1}$    \& $0$           \& $0$           \&$\cdots$   \& $0$ \\
+    $w_3$       \& $A_{3,1}$         \& $0$           \& $-A_{3,1}$    \& $0$           \&$\cdots$   \& $0$ \\
+    $w_4$       \& $A_{4,1}$         \& $0$           \& $0$           \& $-A_{4,1}$    \&$\cdots$   \& $0$ \\
+    $\vdots$    \& $\vdots$          \& $\vdots$      \& $\vdots$      \& $\vdots$      \& $\ddots$  \& $\vdots$\\
+    $w_n$       \& $A_{n,1}$         \& $0$           \& $0$           \& $0$           \&$\cdots$   \& $-A_{n,1}$ \\
 };
 \node[fit= (m-2-2.north west) (m-7-7.south east), left delimiter={[}, right delimiter={]},inner sep=0ex] {};
 \end{tikzpicture}
@@ -704,14 +756,15 @@ i.e. if the first two rows of $C$ are identical. A matrix with two identical row
 that a matrix $C$ exists such that,
 \[
 \begin{tikzpicture}[baseline={([yshift=-3.5ex]current bounding box.center)}]
-\matrix(m) [matrix of nodes, row sep=1ex, column sep=3ex, nodes in empty cells, nodes={shape=rectangle,minimum height=5ex, anchor=center},] {
-       &  ${w}_1$    & ${w}_2$ & ${w}_3$ & ${w}_4$ & $\cdots$ & ${w}_n$ \\
- ${\hat w}_1$ & $C_{1,1}$ & $C_{1,2}$ & $C_{1,3}$ & $C_{1,4}$ &$\cdots$ & $C_{1,n}$ \\
- ${\hat w}_2$ & $C_{1,1}$ & $C_{1,2}$ & $C_{1,3}$ & $C_{1,4}$ &$\cdots$ & $C_{1,n}$  \\
- ${\hat w}_3$ & $C_{2,1}$ & $C_{2,2}$ & $C_{2,3}$ & $C_{2,4}$ &$\cdots$ & $C_{2,n}$ \\
-  ${\hat w}_4$ & $C_{3,1}$ & $C_{3,2}$ & $C_{3,3}$ & $C_{3,4}$ &$\cdots$ & $C_{3,n}$ \\
- $\vdots$ & $\vdots$  & $\vdots$ & $\vdots$  & $\ddots$ & $\vdots$ \\
-  ${\hat w}_n$ & $C_{n-1,1}$ & $C_{n-1,2}$ & $C_{n-1,3}$ & $A=C_{n-1,4}$ &$\cdots$ & $C_{n-1,n}$ \\
+\matrix(m) [matrix of nodes, row sep=1ex, column sep=3ex, nodes in empty cells, nodes={shape=rectangle,minimum height=5ex, anchor=center},
+            ampersand replacement=\&,] {
+                \&  ${w}_1$      \& ${w}_2$       \& ${w}_3$       \& ${w}_4$       \& $\cdots$  \& ${w}_n$ \\
+ ${\hat w}_1$   \& $C_{1,1}$     \& $C_{1,2}$     \& $C_{1,3}$     \& $C_{1,4}$     \&$\cdots$   \& $C_{1,n}$ \\
+ ${\hat w}_2$   \& $C_{1,1}$     \& $C_{1,2}$     \& $C_{1,3}$     \& $C_{1,4}$     \&$\cdots$   \& $C_{1,n}$  \\
+ ${\hat w}_3$   \& $C_{2,1}$     \& $C_{2,2}$     \& $C_{2,3}$     \& $C_{2,4}$     \&$\cdots$   \& $C_{2,n}$ \\
+  ${\hat w}_4$  \& $C_{3,1}$     \& $C_{3,2}$     \& $C_{3,3}$     \& $C_{3,4}$     \&$\cdots$   \& $C_{3,n}$ \\
+ $\vdots$       \& $\vdots$      \& $\vdots$      \& $\vdots$      \& $\vdots$      \& $\dots$   \& $\vdots$\\
+  ${\hat w}_n$  \& $C_{n-1,1}$   \& $C_{n-1,2}$   \& $C_{n-1,3}$   \& $C_{n-1,4}$ \&$\cdots$   \& $C_{n-1,n}$ \\
 };
 \node[fit= (m-2-2.north west) (m-7-7.south east), left delimiter={[}, right delimiter={]},inner sep=0ex] {};
 \end{tikzpicture}
@@ -739,6 +792,43 @@ The last equation holds only if the coefficients of the ${\hat w}_j$ vectors are
 \]
 for all $j$. Since $C$ is the matrix of a linear map
 from a vector space with dimension $n$
-to vector space with dimension $n-1$ this linear map cannot be injective; therefore the null set of this transformation contains non-zero vectors. It follows that $w_1,w_2,\ldots,w_n$ are not independent and a basis transformation matrix with two identical rows is not admissible.
-\end{solution}
+to vector space with dimension $n-1$ this linear map cannot be injective; therefore the null set of this transformation contains non-zero vectors. 
+It follows that $w_1,w_2,\ldots,w_n$ are not independent and a basis transformation matrix with two identical rows is not admissible.
+}
+\end{problem}
+\newpage
+\begin{problem}[3.D.2]
+    { % problem
+        Suppose $V$ is finite-dimensional and $\dim V>1$. Prove that the set of noninvertible operators on $V$
+        is not a subspace of $\mathcal{L}(V)$.
+    }
+    { % solution
+        If an operator $T$ is noninvertible it is also noninjective and nonsurjective since $V$ is finite-dimensional. 
+        If an operator is nonsurjective then $\dim \range T < \dim V$ (this explains the condition $\dim V>1$ ; if $\dim V=1$
+        then $\dim range T=0$, $T$ is an operator which maps all $v \in V$ to 0 and the set of operators with this property
+        is a subspace). 
+        
+        We can choose two operators $T_1$ and $T_2$ with the following property: $\range T_1=\Span\{v_1,\ldots,v_r\}$
+        and $\range T_2=\Span\{v_{r+1},\ldots,V_n\}$ where $n=\dim V$. Then $T_1+T_2$ has the property
+        $\range T_1+T_2 = \Span\{v_1,\ldots,v_n\}=V$. Since $T_1+T_2$ is surjective it is also the case that it is invertible.
+        Therefore the set of noninvertible operators is not closed under addition and is not a subspace of $\mathcal{L}(V)$.
+     }
+\end{problem}
+\begin{problem}[3.D.3]
+    {
+        Suppose $V$ is finite-dimensional, $U$ is a subspace of $V$, and $S\in\lmap{U}{V}$.
+        Prove there exists an invertible operator $T\in \mathcal{L}(V)$ such that $Tu=Su$
+        for every $u\in U$ if and only if $S$ is injective.
+    }
+    {
+        Since $U$ is a subspace of $V$ we can construct an operator $T\in\mathcal{L}(V)$
+        with the property $Tu=Su$ for every $u\in U$. It is clear that since $S$ is injective in $U$, $T$ has
+        the same property. For $v \in V\setminus U$, we can use the identity operator so that $Tv=Iv=v$ which is also 
+        injective. Therefore, $T$ is injective for all $v \in V$; since an injective operator in finite dimensional
+        space is also invertible it follows that $T$ is invertible.
+        
+        Now start with the condition that $T$ is an invertible operator in $\mathcal{L}(V)$; this implies it is also 
+        injective. Since $Tu=Su$ for every $u \in U$, $S$ must also be injective.  
+    }
+\end{problem}
 \end{document}
