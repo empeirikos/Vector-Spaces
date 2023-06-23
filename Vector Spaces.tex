@@ -10,14 +10,16 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{physics}
+\usepackage[shortlabels]{enumitem}  
 \DeclareSymbolFont{sfoperators}{OT1}{cmss}{m}{n}
 \DeclareSymbolFontAlphabet{\mathsf}{sfoperators}
 
 \usepackage{tikz}
 \usetikzlibrary{fit,shapes,calc,matrix,math,positioning,arrows.meta,fpu,patterns,patterns.meta,fadings}
 
+%https://tex.stackexchange.com/questions/22801/correct-delimiter-height-in-tikz
+%see solution by Martin Scharrer
 \makeatletter
-
 \def\tikz@delimiter#1#2#3#4#5#6#7#8{%
   \bgroup
     \pgfextra{\let\tikz@save@last@fig@name=\tikz@last@fig@name}%
@@ -36,10 +38,42 @@
 \def\operator@font{\mathgroup\symsfoperators}
 \makeatother
 
+\newcommand{\apo}{%
+  \mathrel{%
+    \tikz[baseline=(current bounding box.center),scale=.3]{
+    \def\x{1}
+    \def\y{2}
+    \def\r{1.5}
+    \draw (0,0) -- (\x,0);
+    \draw (0,0) -- (\r*\x,\y);
+    \draw (.5*\x,0) -- (\r*\x,\y);
+    \draw (\x,0) -- (\r*\x,\y);
+    }
+  }%
+}%
+
+\newcommand{\lcone}{%
+  \mathrel{%
+    \tikz[baseline=(current bounding box.center),scale=.3]{
+    \coordinate (a) at (-1,-1);
+    \coordinate (b) at (1,-1);
+    \coordinate (c) at (1,1);
+    \coordinate (d) at (-1,1);
+    \draw (a) -- (c);
+    \draw (b) -- (d);
+    \draw[dash pattern=on 2pt off 1pt] (b) arc [start angle=0, end angle=180, x radius=1, y radius=0.25];
+    \draw (a) arc [start angle=180, end angle=360, x radius=1, y radius=0.25];
+    \draw (c) arc [start angle=0, end angle=360, x radius=1, y radius=0.25];
+    }
+  }%
+}%
 \DeclareMathOperator{\range}{range}
+\DeclareMathOperator{\domain}{domain}
 \DeclareMathOperator{\nspace}{null}
 \DeclareMathOperator{\Span}{Span}
 \newcommand{\lmap}[2]{\mathcal{L}(#1,#2)}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\FF}{\mathbb{F}}
 %\newtheoremstyle{solve}% name of the style to be used
 %  {10pt}% measure of space to leave above the theorem. E.g.: 3pt
 %  {10pt}% measure of space to leave below the theorem. E.g.: 3pt
@@ -67,7 +101,7 @@
     { % optional has value
         \par\medskip\noindent \textbf{Problem \theproblem} (#1): #2
         \vspace{-1ex}\newline\rule{\textwidth}{0.5pt}
-        \newline\textbf{Solution:} #3
+        \newline\textbf{Solution:} {#3}
         \vspace{-1ex}\newline\rule{\textwidth}{0.5pt}
     }
 }
@@ -75,15 +109,516 @@
     \medskip
 }
 
+\NewDocumentCommand\tikzproblem{o +m +m}
+{ 
+    \refstepcounter{problem}
+    \IfNoValueTF{#1}
+    { % optional is empty
+        \begin{center}
+            \begin{tikzpicture}
+                \node[rectangle,draw,inner sep=5pt,text width=.95\textwidth,] (problem) at (0,0) 
+                {\textbf{Problem \theproblem}: #2};  
+                \node[draw,rectangle,scale=.4,fill=white,opacity=1] at (problem.north west) {$\apo$};
+                \node[draw,rectangle,scale=.4,fill=white,opacity=1] at (problem.north east) {$\apo$};
+                \node[draw,rectangle,scale=.4,fill=white,opacity=1] at (problem.south east) {$\apo$};
+                \node[draw,rectangle,scale=.4,fill=white,opacity=1] at (problem.south west) {$\apo$};
+%                \node[rectangle,draw,inner sep=5pt,text width=.95\textwidth,] (solution) [below=of problem]
+%                {\textbf{Solution:} #3};
+            \end{tikzpicture}
+        \end{center}
+        \noindent
+        \begin{tikzpicture}
+            \draw[line cap=rect] (0,0) -- (\linewidth-\pgflinewidth,0);
+        \end{tikzpicture}
+        \textbf{Solution:} #3
+        \\ \noindent
+        \begin{tikzpicture}
+            \draw[line cap=rect] (0,0) -- (\linewidth-\pgflinewidth,0);
+        \end{tikzpicture}
+    }
+    {
+        \begin{center}
+            \begin{tikzpicture}
+                \node[rectangle,draw,inner sep=5pt,text width=.95\textwidth,] (problem) at (0,0) 
+                {\textbf{Problem \theproblem} (#1): #2};  
+                \node[draw,rectangle,scale=.4,fill=white,opacity=1] at (problem.north west) {$\apo$};
+                \node[draw,rectangle,scale=.4,fill=white,opacity=1] at (problem.north east) {$\apo$};
+                \node[draw,rectangle,scale=.4,fill=white,opacity=1] at (problem.south east) {$\apo$};
+                \node[draw,rectangle,scale=.4,fill=white,opacity=1] at (problem.south west) {$\apo$};
+                %\node[rectangle,draw,inner sep=5pt,text width=.95\textwidth,] (solution) [below=of problem]
+                %{\textbf{Solution:} #3};
+            \end{tikzpicture}
+        \end{center}    
+        \noindent
+        \begin{tikzpicture}
+            \draw[line cap=rect] (0,0) -- (\linewidth-\pgflinewidth,0);
+        \end{tikzpicture}
+        \textbf{Solution:} #3
+        \\ \noindent
+        \begin{tikzpicture}
+            \draw[line cap=rect] (0,0) -- (\linewidth-\pgflinewidth,0);
+        \end{tikzpicture}
+    }    
+}
+
+
 \title{Linear Algebra Done Right: \\ answers to selected exercises}
 \author{ }
 \date{}
 
 \begin{document}
 
-\maketitle
+\begin{titlepage}
+    \fontfamily{cmss}\selectfont
+    \vspace*{5\baselineskip}
+    \center
+    {\Huge Solutions to selected exercises}
+    \vspace{\baselineskip}
+    \begin{center}
+    \begin{tikzpicture}[scale=1.5,every node/.style={scale=1.3}]
+        \def\x{5}
+        \def\y{10}
+        \def\r{1.5}
+        \draw[line width=1pt] (0,0) -- (\x,0) node[pos=0.5,below]{$c$};
+        \draw[line width=1pt] (0,0) -- (\r*\x,\y) node[pos=0.5,above,xshift=-10pt]{$a$};
+        \draw[line width=1pt] (.5*\x,0) -- (\r*\x,\y) node[pos=0.5,above,xshift=-10pt]{$d$};
+        \draw[line width=1pt] (\x,0) -- (\r*\x,\y) node[pos=0.5,above,xshift=10pt]{$b$};
+        \end{tikzpicture}
+    \end{center}
+    %\maketitle
+\end{titlepage}
 
 \section*{Chapter 3}
+
+
+\[
+\lcone    
+\]
+%
+%\begin{center}
+%    \begin{tikzpicture}
+%        \node[rectangle,draw,inner sep=5pt,text width=.95\textwidth,] (problem) at (0,0) 
+%        {Give an example of a linear map $T$ such 
+%        that $\dim \nspace T=3$ and $\dim \range T=2$.};  
+%        \node[draw,rectangle,scale=.4,fill=white,opacity=1] at (problem.north west) {$\apo$};
+%        \node[draw,rectangle,scale=.4,fill=white,opacity=1] at (problem.north east) {$\apo$};
+%        \node[draw,rectangle,scale=.4,fill=white,opacity=1] at (problem.south east) {$\apo$};
+%        \node[draw,rectangle,scale=.4,fill=white,opacity=1] at (problem.south west) {$\apo$};
+%        \node[rectangle,draw,inner sep=5pt,text width=.95\textwidth,] (solution) [below=of problem]
+%        {
+%            One example is $T:\RR^5\rightarrow\RR^5$ using a $5 \times 5$ matrix with only two
+%            independent columns:
+%            \[
+%            A = 
+%            \begin{tikzpicture}[baseline={([yshift=-2.5ex]current bounding box.center)}]
+%            \matrix(m) [matrix of nodes, row sep=1ex, column sep=3ex, nodes in empty cells, 
+%            nodes={shape=rectangle,minimum height=3ex, anchor=center},
+%            ampersand replacement=\&,] {
+%                \mbox{\tiny$A_1$}  \& \mbox{\tiny$ A_2$}  \& \mbox{\tiny$A_3=A_1+A_2$}     \& \mbox{\tiny$A_4=A_1-A_2$}  \& \mbox{\tiny$A_5=2A_1-A_2$ }      \\
+%                $\phantom{+}1$  \& $\phantom{+}2$  \& $\phantom{+}3$         \& $-1$              \& $\phantom{+}0$      \\
+%                $\phantom{+}2$  \& $\phantom{+}1$  \& $\phantom{+}3$         \& $\phantom{+}1$      \& $\phantom{+}3$      \\
+%                $\phantom{+}0$  \& $-1$             \& $-1$        \& $\phantom{+}1$      \& $\phantom{+}1$      \\
+%                $\phantom{+}1$  \& $\phantom{+}3$  \& $\phantom{+}4$         \& $-2$               \& $-1$     \\
+%                $-1$            \& $\phantom{+}1$  \& $\phantom{+}0$         \& $-2$               \& $-3$     \\
+%            };
+%            \node[fit= (m-2-1.north west) (m-6-5.south east), left delimiter={[}, right delimiter={]},inner sep=0ex] {};
+%            \end{tikzpicture}
+%            \]  
+%        };
+%    \end{tikzpicture}
+%\end{center}
+
+\tikzproblem[3.B.1]
+{
+    Give an example of a linear map $T$ such that $\dim \nspace T=3$ and
+    $\dim \range T=2$.
+}
+    {% solution 
+    One example is $T:\RR^5\rightarrow\RR^5$ using a $5 \times 5$ matrix with only two
+    independent columns:
+    \[
+    A = 
+    \begin{tikzpicture}[baseline={([yshift=-2.5ex]current bounding box.center)}]
+    \matrix(m) [matrix of nodes, row sep=1ex, column sep=3ex, nodes in empty cells, 
+    nodes={shape=rectangle,minimum height=3ex, anchor=center},
+    ampersand replacement=\&,] {
+        \mbox{\tiny$A_1$}  \& \mbox{\tiny$ A_2$}  \& \mbox{\tiny$A_3=A_1+A_2$}     \& \mbox{\tiny$A_4=A_1-A_2$}  \& \mbox{\tiny$A_5=2A_1-A_2$ }      \\
+        $\phantom{+}1$  \& $\phantom{+}2$  \& $\phantom{+}3$         \& $-1$              \& $\phantom{+}0$      \\
+        $\phantom{+}2$  \& $\phantom{+}1$  \& $\phantom{+}3$         \& $\phantom{+}1$      \& $\phantom{+}3$      \\
+        $\phantom{+}0$  \& $-1$             \& $-1$        \& $\phantom{+}1$      \& $\phantom{+}1$      \\
+        $\phantom{+}1$  \& $\phantom{+}3$  \& $\phantom{+}4$         \& $-2$               \& $-1$     \\
+        $-1$            \& $\phantom{+}1$  \& $\phantom{+}0$         \& $-2$               \& $-3$     \\
+    };
+    \node[fit= (m-2-1.north west) (m-6-5.south east), left delimiter={[}, right delimiter={]},inner sep=0ex] {};
+    \end{tikzpicture}
+    \]  
+    We can check that the first two columns are independent. If,
+    \[
+    a \mqty(1 \\2 \\0 \\1 \\-1 \\)
+    +
+    b \mqty(2 \\1 \\-1 \\3 \\1 \\)
+    =
+    0   
+    \]
+    we must have $a\cdot0+b\cdot(-1)=0\Rightarrow b=0$; also $a\cdot1+b\cdot2=0\Rightarrow a=0$.
+
+    The product of matrix $A$ with a vector $x$ can be written as,
+    \[
+        y=x_1A_1+x_2A_2+x_3A_3+x_4A_4+x_5A_5
+    \]  
+    i.e. a linear combination of the five columns of $A$. Since,
+    \begin{align*}
+        A_3&=A_1+A_2\\
+        A_4&=A_1-A_2\\
+        A_5&=2A_1-A2
+    \end{align*} 
+    we have,
+    \[
+    y=\qty(x_1+x_3+x_4+2x_5)A_1+\qty(x_2+x_3-x_4-x_5)A_2    
+    \]
+
+    Since all $y=Ax$ can be written a a linear combination of two
+    independent vectors $\dim \range T=2$. For the null space of $T$
+    we must have,
+    \begin{align*}
+        x_1+x_3+x_4+2x_5 &=0 \\
+        x_2+x_3-x_4-x_5 & =0
+    \end{align*}
+    since $A_1$, $A_2$ are independent vectors. So,
+    \[
+        x_1=-x_3-x_4-2x_5
+    \]
+    and,
+    \[
+        x_2=-x_3+x_4+x_5
+    \]
+    Therefore all $x \in \nspace T$ can be written as,
+    \[
+    \mqty(
+        -x_3-x_4-2x_5 \\ -x_3+x_4+x_5 \\ x_3 \\ x_4 \\ x_5
+    )    
+    =
+    x_3 \mqty(
+        -1 \\ -1 \\ 1 \\ 0 \\ 0
+    )   
+    +
+    x_4 \mqty(
+        -1 \\ 1 \\ 0 \\ 1 \\ 0
+    )  
+    +
+    x_5 \mqty(
+        -2 \\ 1 \\ 0 \\ 0 \\ 1
+    )  
+    \]
+    i.e. a linear combination of three vectors. It is easy to show that
+    these three vectors are independent and therefore $\dim \nspace T=3$.
+}
+
+\begin{problem}[3.B.1]
+    {% problem
+        Give an example of a linear map $T$ such that $\dim \nspace T=3$ and
+        $\dim \range T=2$.
+    }
+    {% solution 
+        One example is $T:\RR^5\rightarrow\RR^5$ using a $5 \times 5$ matrix with only two
+        independent columns:
+        \[
+        A = 
+        \begin{tikzpicture}[baseline={([yshift=-2.5ex]current bounding box.center)}]
+        \matrix(m) [matrix of nodes, row sep=1ex, column sep=3ex, nodes in empty cells, 
+        nodes={shape=rectangle,minimum height=3ex, anchor=center},
+        ampersand replacement=\&,] {
+            \mbox{\tiny$A_1$}  \& \mbox{\tiny$ A_2$}  \& \mbox{\tiny$A_3=A_1+A_2$}     \& \mbox{\tiny$A_4=A_1-A_2$}  \& \mbox{\tiny$A_5=2A_1-A_2$ }      \\
+            $\phantom{+}1$  \& $\phantom{+}2$  \& $\phantom{+}3$         \& $-1$              \& $\phantom{+}0$      \\
+            $\phantom{+}2$  \& $\phantom{+}1$  \& $\phantom{+}3$         \& $\phantom{+}1$      \& $\phantom{+}3$      \\
+            $\phantom{+}0$  \& $-1$             \& $-1$        \& $\phantom{+}1$      \& $\phantom{+}1$      \\
+            $\phantom{+}1$  \& $\phantom{+}3$  \& $\phantom{+}4$         \& $-2$               \& $-1$     \\
+            $-1$            \& $\phantom{+}1$  \& $\phantom{+}0$         \& $-2$               \& $-3$     \\
+        };
+        \node[fit= (m-2-1.north west) (m-6-5.south east), left delimiter={[}, right delimiter={]},inner sep=0ex] {};
+        \end{tikzpicture}
+        \]  
+        We can check that the first two columns are independent. If,
+        \[
+        a \mqty(1 \\2 \\0 \\1 \\-1 \\)
+        +
+        b \mqty(2 \\1 \\-1 \\3 \\1 \\)
+        =
+        0   
+        \]
+        we must have $a\cdot0+b\cdot(-1)=0\Rightarrow b=0$; also $a\cdot1+b\cdot2=0\Rightarrow a=0$.
+
+        The product of matrix $A$ with a vector $x$ can be written as,
+        \[
+            y=x_1A_1+x_2A_2+x_3A_3+x_4A_4+x_5A_5
+        \]  
+        i.e. a linear combination of the five columns of $A$. Since,
+        \begin{align*}
+            A_3&=A_1+A_2\\
+            A_4&=A_1-A_2\\
+            A_5&=2A_1-A2
+        \end{align*} 
+        we have,
+        \[
+        y=\qty(x_1+x_3+x_4+2x_5)A_1+\qty(x_2+x_3-x_4-x_5)A_2    
+        \]
+
+        Since all $y=Ax$ can be written a a linear combination of two
+        independent vectors $\dim \range T=2$. For the null space of $T$
+        we must have,
+        \begin{align*}
+            x_1+x_3+x_4+2x_5 &=0 \\
+            x_2+x_3-x_4-x_5 & =0
+        \end{align*}
+        since $A_1$, $A_2$ are independent vectors. So,
+        \[
+            x_1=-x_3-x_4-2x_5
+        \]
+        and,
+        \[
+            x_2=-x_3+x_4+x_5
+        \]
+        Therefore all $x \in \nspace T$ can be written as,
+        \[
+        \mqty(
+            -x_3-x_4-2x_5 \\ -x_3+x_4+x_5 \\ x_3 \\ x_4 \\ x_5
+        )    
+        =
+        x_3 \mqty(
+            -1 \\ -1 \\ 1 \\ 0 \\ 0
+        )   
+        +
+        x_4 \mqty(
+            -1 \\ 1 \\ 0 \\ 1 \\ 0
+        )  
+        +
+        x_5 \mqty(
+            -2 \\ 1 \\ 0 \\ 0 \\ 1
+        )  
+        \]
+        i.e. a linear combination of three vectors. It is easy to show that
+        these three vectors are independent and therefore $\dim \nspace T=3$.
+    }
+\end{problem}
+
+\begin{problem}[3.B.4]
+    {
+        Show that,
+        \[
+        \{ T \in \lmap{\RR^5}{\RR^4}: \dim \nspace T>2 \}    
+        \] 
+        is not a subspace of $\lmap{\RR^5}{\RR^4}$.
+    }
+    {
+        $\dim \nspace T>2$ implies that any $v \in \nspace T$ can be written as a linear combination
+        of 3 or more independent vectors. For a $4\times 5$ matrix,
+        \[
+            A = \mqty[A_1 & A_2 & A_3 & A_4 & A_5]
+        \]  
+        this means that a maximum of two columns can be independent. So lets assume that columns
+        $A_3,A_4,A_5$ can be written as linear combinations of $A_1,A_2$.
+
+        Now consider another $4\times 5$ matrix,
+        \[
+            B = \mqty[B_1 & B_2 & B_3 & B_4 & B_5]
+        \]          
+        with $B_3$ and $B_4$ two independent vectors and all other columns linear combinations of
+        these two vectors. If we add the two matrices we have,
+        \[
+        C = A + B = \mqty[A_1+B_1 & A_2+B_2 & A_3+B_3 & A_4+B_4 & A_5+B_5]    
+        \]
+        Since $A_1, A_2, B_3, B_4$ are independent vectors only $A_5+B_5$ can be written as 
+        a linear combination of these vectors. We have,
+        \begin{align*}
+            C_1 & = A_1 + B_1 = A_1 + b_{13} B_3 + b_{14} B_4 \\
+            C_2 & = A_2 + B_2 = A_2 + b_{23} B_3 + b_{24} B_4 \\
+            C_3 & = A_3 + B_3 = a_{31} A_1 + a_{32} A_2 + B_3 \\
+            C_4 &= A_4 + B_4 = a_{41} A_1 + a_{42} A_2 + B_4
+        \end{align*}
+        which are independent. We must show that the following equation,
+        \[
+        c_1C_1+c_2C_2+c_3C_3+c_4C_4=0    
+        \]
+        holds only if $c_1=c_2=c_3=c_4=0$. Rewrite it as,
+        \[
+        (c_1+c_3a_{31}+c_4a_{41})A_1+ (c_2+c_3a_{32}+c_4a_{42})A_2
+        +(c_1b_{13}+c_2b_{23}+c_3)B_3 + (c_1b_{14}+c_2b_{24}+c_4)B_4=0    
+        \]
+        Since $A_1,A_2,B_3,B_4$ are independent we must have,
+        \begin{align*}
+            c_1+c_3a_{31}+c_4a_{41} & = 0 \\
+            c_2+c_3a_{32}+c_4a_{42} &= 0 \\
+            c_1b_{13}+c_2b_{23}+c_3 &= 0 \\
+            c_1b_{14}+c_2b_{24}+c_4 &= 0
+        \end{align*}
+        or,
+        \[
+        c_1 \mqty(1 \\ 0 \\ b_{13} \\ b_{14})
+        +
+        c_2 \mqty(0 \\ 1 \\ b_{23} \\ b_{24})    
+        +
+        c_3 \mqty(a_{31} \\ a_{32} \\ 1 \\ 0)
+        +
+        c_4 \mqty(a_{41} \\ a_{42} \\ 0 \\ 1)
+        =
+        0
+        \]
+        This equation has non-zero solutions only if the following special condition is satisfied:
+        \[
+          1 - a_{32}b_{23} - a_{42}b_{24}-a_{31}b_{13}-a_{41}b_{14} 
+          + \qty(b_{13}b_{24}-b_{23}b_{14})\qty(a_{31}a_{42}-a_{41}a_{32})=0  
+        \]
+        In general these four vectors are independent and therefore $\dim \range C =4$
+        and $\dim \nspace C=1$. One example is with all the $a$ and $b$ coefficients equal to 0.
+        So we have shown that the set of linear maps from
+        $\RR^5$ to $\RR^4$ with $\dim \nspace T>2$ is not a subspace of $\lmap{\RR^5}{\RR^4}$.
+    }
+\end{problem}
+
+\begin{problem}[3.B.5]
+    {% problem
+        Given an example of a linear map $T:\RR^4 \rightarrow \RR^4$ such that,
+        \[
+        \range T = \nspace T    
+        \]
+    }
+    {% solution
+        We know that a matrix $A$,
+        \begin{equation}
+        A = 
+        \mqty[
+        A_1 & A_2 & A_3 & A_4
+        ]
+        \end{equation}
+        with $A_1$, $A_2$ two independent vectors and $A_3=aA_1+bA_2$, $A_4=cA_1+dA_2$ has a range equal to 
+        $\Span\{A_1,A_2\}$. $\nspace A$ contains vectors $x$ with the property,
+        \begin{equation}
+        x_1 A_1 + x_2 A_2 + x_3 A_3 + x_4 A_4 = 0
+        \end{equation}  
+        or,
+        \begin{equation}
+        (x_1+ax_3+cx_4) A_1 + (x_2+bx_3+dx_4) A_2  = 0 \label{null_cond}
+        \end{equation}  
+        Since $A_1$, $A_2$ are independent vectors  ($\ref{null_cond}$) holds only if,
+        \begin{align}
+        x_1 & = - a x_3 - c x_4 \\
+        x_2 & = - b x_3 - d x_4
+        \end{align}
+        Therefore any $x \in \nspace A$ can be written as,
+        \begin{equation}
+        x = x_3 \mqty( -a \\ -b \\ 1 \\ 0) +
+        x_4 \mqty(-c \\ -d \\ 0 \\ 1)
+        \end{equation}  
+        If,
+        \begin{equation}
+        A_1 = \mqty( -a \\ -b \\ 1 \\ 0)
+        \end{equation}
+        and,
+        \begin{equation}
+        A_2 = \mqty(-c \\ -d \\ 0 \\ 1)
+        \end{equation}
+        then $\nspace A=\Span\{A_1,A_2\}=\range A$. Note that $A_1$, $A_2$ are independent since,
+        \begin{equation}
+        x \mqty( -a \\ -b \\ 1 \\ 0) + y \mqty(-c \\ -d \\ 0 \\ 1) =0 
+        \end{equation}
+        holds only for $x=y=0$. Therefore we can write,
+        \begin{equation}
+        A=\mqty[
+        -a & -c & -a^2-bc & -(a+d)c \\
+        -b & -d & -(a+d)b & -d^2-bc \\
+        1 & 0 & a & c \\
+        0 & 1 & b & d 
+        ]
+        =
+        \mqty[
+        -{\tilde A}  & -{\tilde A}^2 \\
+        I & {\tilde A}
+        ]
+        \label{form}
+        \end{equation}  
+        where,
+        \begin{equation}
+        {\tilde A}= \mqty[a & c \\ b & d]
+        \end{equation}  
+        The form of ($\ref{form}$) can be extended to any $2n \times 2n$ matrix so that the first
+        $n$ columns are independent vectors and the last $n$ columns are linear combinations of these
+        vectors. All matrices of this form have $\range A=\nspace A$.  
+        Note that this is not possible for $T:\RR^{2n+1}\rightarrow \RR^{2n+1}$ since 
+        $\dim\;\range A+\dim \nspace A=2n+1$ and therefore 
+        $\dim\;\range A \neq \dim \nspace A$ so $\range A \neq \nspace A$.  
+    }
+\end{problem}
+
+\begin{problem}[3.B.7]
+    {
+        Suppose $V$ and $W$ are finite-dimensional with $2 \leq \dim V \leq \dim W$.
+        Show that $\{T \in \lmap{V}{W}: T \text{ is not injective }\}$ is not a 
+        subspace of $\lmap{V}{W}$.
+    }
+    {
+        This is equivalent to showing that although two linear maps $T_1,T_2$ have
+        $\dim \nspace > 0$, $\dim \nspace T_1+T_2 = 0$. We can choose two linear
+        maps with the property $\nspace T_1 \cap \nspace T_2 = \{0\} $.  Then if
+        $v_1 \in \nspace T_1$,
+        \[
+        (T_1+T_2)v_1=T_1v_1+T_2v_1=T_2v_1 \neq 0    
+        \]
+        and therefore $v_1 \notin \nspace T_1+T_2$. In the same way if $v_2 \in \nspace T_2$,
+        $v_2 \notin \nspace T_1+T_2$. Therefore $\nspace T_1+T_2=\{0\}$ and $T_1+T_2$ is 
+        an injective linear map.
+
+        Note that if $\dim V=1$ a linear map will always be injective since $\dim \nspace T<1$
+        (excluding the trivial case of $Tv=0$ for all $v$)
+        and therefore $\nspace T = \{0\}$ (as an example consider the linear map $T:x\rightarrow ax$).
+        Also if $\dim W < \dim V$ then it is not possible for any linear map to be injective, so 
+        in this case,
+        \[
+            \{T \in \lmap{V}{W}: T \text{ is not injective }\}=\lmap{V}{W}
+        \]
+    }
+\end{problem}
+
+\begin{problem}[3.B.8]
+    {
+        Suppose $V$ and $W$ are finite-dimensional with $\dim V \geq \dim W \geq 2$.
+        Show that $\{T \in \lmap{V}{W}: T \text{ is not surjective }\}$
+        is not a subspace of $\lmap{V}{W}$.
+    }
+    {
+        The restriction $\dim W \geq 2$ is necessary to avoid dealing with trivial cases.
+        If $\dim W=1$ then if $T$ is not surjective $\dim \range T=0$ which is only possible
+        if $TV=0v$ and the set of non-surjective linear maps has a single member. 
+        If $\dim W=0$ then $\lmap{V}{\{0\}}=\{T:Tv=0v\}$ and the set of non-surjective linear
+        maps is the empty set.        
+
+        Now start with two linear maps $T_1, T_2$ which are not surjective with the property
+        $\range T_1 \subset W$, $\range T_2 \subset W$ and $\range T_1 \cup \range T_2 = W$.
+        Then $\range T_1+T_2 = W$ and therefore $T_1+T_2$ is surjective. 
+    }
+\end{problem}
+
+\begin{problem}[3.B.12]
+    {
+        Suppose $V$ is finite-dimensional and that $T \in \lmap{V}{W}$. Prove that there
+        exists a subspace $U$ of $V$ such that $U \cap \nspace T =\{0\}$ and 
+        $\range T=\{ Tu: u \in U\}$.
+    }
+    {
+        Think of the domain of $T$ as composed of two sets: the null set for which
+        $v \in \nspace T$, $Tv=0$ and $U$ for which $u \in U$, $Tu\neq 0$ unless $u=0$.  
+        Then since $\domain T= U \cup \nspace T$, $\range T= \{Tu: u \in U\}$. For $U$ to
+        be a subspace of $V$ it must have the following properties:
+        \begin{enumerate}[i),itemsep=0pt,parsep=0pt]
+            \item $u_1,u_2\in U \Rightarrow u_1+u_2 \in U$: since $T(u_1+u_2)=0$
+            only if $Tu_1+Tu_2=0\Rightarrow Tu_1=-Tu_2$ and this is true only
+            if $u_1=-u_2$ (in which case $u_1+u_2=0\in U$) this property holds.
+            \item $u \in U, a \in \FF \Rightarrow au \in U$: unless $u=0$ or $a=0$
+            or both are zero $au\neq 0$ so $au \in U$.
+            \item $0 \in U$ from the definition of $U$ so this completes the proof.
+        \end{enumerate}
+        \ 
+    }
+\end{problem}
 
 \begin{problem}[3.B.20]
     {
@@ -831,4 +1366,159 @@ It follows that $w_1,w_2,\ldots,w_n$ are not independent and a basis transformat
         injective. Since $Tu=Su$ for every $u \in U$, $S$ must also be injective.  
     }
 \end{problem}
+\begin{problem}[3.D.4]
+    {
+        Suppose $W$ is finite dimensional and $T_1,T_2\in \lmap{V}{W}$. Prove that 
+        $\nspace T_1=\nspace T_2$ if and only if there exists an invertible operator 
+        $S\in\mathcal{L}(W)$ such that $T_1=ST_2$.
+    }
+    {
+        Start with $\nspace T_1=\nspace T_2$; $T_1v\neq 0 \Leftrightarrow Tv_2\neq 0$;
+        define an operator $S$ using a construction as in the following graph:
+        \begin{center}
+        \begin{tikzpicture}[dot/.style = {circle, draw=black,fill=#1, minimum size=2pt,
+            inner sep=0pt, outer sep=0pt},scale=.7]
+            \draw[scale=2,rotate=-15,label=$V$] (0,0) ellipse (20pt and 40pt);
+            \begin{scope}[xshift=150pt]
+            \draw[scale=2,rotate=-15,label=$W$] (0,0) ellipse (20pt and 40pt);
+            \node[dot,label=above right:$w$] (w) at (10pt,20pt) {};
+            \node[dot,label=below right:$w'$] (w') at (-10pt,-20pt) {};
+            \node at (-10pt,80pt) {$W$};
+            \end{scope}
+            \node at (-10pt,80pt) {$V$};
+            %\draw (0,0) circle (1pt);
+            \draw[draw=none] (0pt,0pt)arc [start angle=180, end angle=90, x radius=20pt, y radius=60pt]
+            node [dot=none,pos=0,label=above left:$v_1$] (v1) {}
+            node [dot=none,pos=0.2,label=above left:$v_2$] (v2) {}
+            node [dot,pos=0.4,label=above left:$v_3$] (v3) {}
+            node [dot=none,pos=0.6,label=above left:$v_4$] (v4){};
+            \draw[-Stealth,shorten >=1pt] (v1) to[out=-30,in=210] (w);
+            \draw[-Stealth,shorten >=1pt] (v2) to[out=-10,in=200] (w);
+            \draw[-Stealth,shorten >=1pt] (v3) to[out=10,in=170] node[pos=0.5,yshift=7pt] {$w=T_2v_3$} (w) ;
+            \draw[-Stealth,shorten >=1pt] (v4) to[out=30,in=150] (w);
+            \draw[-Stealth,shorten >=1pt] (v3) to[out=-40,in=220] node[pos=0.5,yshift=-7pt,xshift=-10pt] {$w'=T_1v_3$} (w') ;
+            \draw[-Stealth,shorten >=1pt] (w) to[out=-40,in=40] node[pos=0.5,xshift=7pt] {$w'=Sw$} (w') ;
+        \end{tikzpicture}
+        \end{center}
+        For any $w \in \range T_2$ we can find a $v$ such that $w=T_2v$ (in the example above
+        there are four different $v$s with this property so we choose $v_3$). For the same $v$,
+        $w'=T_1v$ (it is possible that in some cases $w'=w$). The linear operator $S$ has the 
+        property $w'=Sw$. Note that if $v \in \nspace T_2$, $T_2v=0$ and since $\nspace T_1=\nspace T_2$,
+        $S0=0$ which is a property of any linear operator. From the definition of $S$, if $T_2v \neq 0$
+        then $ST_2v=T_1v \neq 0$ and therefore $\nspace S=\{0\}$. This means $S$ is injective and using
+        the properties of linear operators it is also invertible.
+        
+        Now assume that $S$ is an invertible linear operator with the property $T_1=ST_2$. For $v \in \nspace T_2$,
+        $T_1v=ST_2v=S0=0$ and therefore $v \in \nspace T_1$. Since $S$ is invertible, $T_2=S^{-1}T_1$; 
+        therefore for $v \in \nspace T_1$, $T_2v=S^{-1}T_1 v=S^{-1}0=0$ and $v \in \nspace T_2$. We conclude that
+        $\nspace T_1=\nspace T_2$.
+    }
+\end{problem}
+
+\tikzproblem[3.D.7]
+    {
+        Suppose $V$ and $W$ are finite-dimensional. Let $v\in V$. Let,
+        $E=\{T \in \lmap{V}{W}:Tv=0\}$. Show that,
+        \begin{enumerate}[a),itemsep=0pt,parsep=0pt]
+            \item $E$ is a subspace of $\lmap{V}{W}$.
+            \item Suppose $v\neq 0$. What is $\dim E$?
+        \end{enumerate} 
+    }
+    {
+        $E$ is a subspace of $\lmap{V}{W}$ if the following conditions hold:
+        \begin{enumerate}[i),parsep=0pt,itemsep=0pt]
+            \item Linear map $0 \in E$: since by definition $0v=0$ for all $v$
+            this condition holds.
+            \item $T_1,T_2 \in E \Rightarrow T_1+T_2 \in E$: since $T_1v=0$ and
+            $T_2v=0$ we have $T_1v+T_2v=(T_1+T_2)v=0$.
+            \item $T \in E,\; a \in \FF \Rightarrow aT \in E$: since $Tv=0$, 
+            $aTv=0$ and therefore $aT \in E$.
+        \end{enumerate}
+
+        Any linear map $T \in \lmap{V}{W}$ can be represented by a matrix,
+        \[
+            \begin{tikzpicture}[baseline={([yshift=-0ex]current bounding box.center)}]
+                \matrix(m) [matrix of nodes, row sep=1ex, column sep=3ex, nodes in empty cells, nodes={shape=rectangle,minimum height=5ex, anchor=center},
+                            ampersand replacement=\&,] {
+                                \&  $v_1$    \& $\cdots$ \& $v_j$     \& $\cdots$ \& $v_m$ \\
+                 ${w}_1$   \& $A_{1,1}$ \& $\cdots$ \& $A_{1,j}$ \& $\cdots$ \& $A_{1,m}$ \\
+                 $\vdots$       \& $\vdots$  \& $\ddots$ \& $\vdots$  \& $\ddots$ \& $\vdots$ \\
+                 ${w}_i$   \& $A_{i,1}$ \& $\cdots$ \& $A_{i,j}$ \& $\cdots$ \& $A_{i,m}$ \\
+                 $\vdots$       \& $\vdots$  \& $\ddots$ \& $\vdots$  \& $\ddots$ \& $\vdots$ \\
+                 ${w}_n$   \& $A_{n,1}$ \& $\cdots$ \& $A_{n,j}$ \& $\cdots$ \& $A_{n,m}$ \\
+                };
+                \node[fit= (m-2-2.north west) (m-6-6.south east), left delimiter={[}, right delimiter={]},inner sep=0ex] {};
+            \end{tikzpicture}
+        \]
+        whose elements are defined by,
+        \[
+        Tv_i = \sum_{j=1}^n A_{j,i} w_j    
+        \]
+        We can set the basis of $V$ to have $v_1=v$ without any loss of generality. Since $T\in E \Rightarrow Tv=0$
+        a linear map $T\in E$ can be represented by the following matrix,
+        \[
+            \begin{tikzpicture}[baseline={([yshift=-2.5ex]current bounding box.center)}]
+                \matrix(m) [matrix of nodes, row sep=1ex, column sep=3ex, nodes in empty cells, nodes={shape=rectangle,minimum height=3ex, anchor=center},
+                            ampersand replacement=\&,] {
+                           \&  $v_1$    \& $\cdots$ \& $v_j$     \& $\cdots$ \& $v_m$ \\
+                 ${w}_1$   \& $0$ \& $\cdots$ \& $A_{1,j}$ \& $\cdots$ \& $A_{1,m}$ \\
+                 $\vdots$  \& $\vdots$  \& $\ddots$ \& $\vdots$  \& $\ddots$ \& $\vdots$ \\
+                 ${w}_i$   \& $0$ \& $\cdots$ \& $A_{i,j}$ \& $\cdots$ \& $A_{i,m}$ \\
+                 $\vdots$  \& $\vdots$  \& $\ddots$ \& $\vdots$  \& $\ddots$ \& $\vdots$ \\
+                 ${w}_n$   \& $0$ \& $\cdots$ \& $A_{n,j}$ \& $\cdots$ \& $A_{n,m}$ \\
+                };
+                \node[fit= (m-2-2.north west) (m-6-6.south east), left delimiter={[}, right delimiter={]},inner sep=0ex] {};
+            \end{tikzpicture}
+        \]
+        The matrix representing $T\in\lmap{V}{W}$ is the linear combination of $n \times m$ basis 
+        matrices each with zero for all elements except from $A_{i,j}=1$ i.e.,
+        \[
+        \mathcal{M}(T)=\sum_{i=1}^n \sum_{j=1}^m A_{i,j} \mathcal{M}_{i,j}   
+        \]
+        where,
+        \[
+            \mathcal{M}_{i,j} =
+            \begin{tikzpicture}[baseline={([yshift=-2.5ex]current bounding box.center)}]
+                \matrix(m) [matrix of nodes, row sep=1ex, column sep=3ex, nodes in empty cells, nodes={shape=rectangle,minimum height=3ex, anchor=center},
+                            ampersand replacement=\&,] {
+                           \&  $v_1$    \& $\cdots$ \& $v_j$          \& $\cdots$ \& $v_m$ \\
+                 ${w}_1$   \& $0$       \& $\cdots$ \& $0$    \& $\cdots$ \& $0$ \\
+                 $\vdots$  \& $\vdots$  \& $\ddots$ \& $\vdots$     \& $\ddots$ \& $\vdots$ \\
+                 ${w}_i$   \& $0$       \& $\cdots$ \& $1$          \& $\cdots$ \& $0$ \\
+                 $\vdots$  \& $\vdots$  \& $\ddots$ \& $\vdots$     \& $\ddots$ \& $\vdots$ \\
+                 ${w}_n$   \& $0$       \& $\cdots$ \& $0$          \& $\cdots$ \& $0$ \\
+                };
+                \node[fit= (m-2-2.north west) (m-6-6.south east), left delimiter={[}, right delimiter={]},inner sep=0ex] {};
+            \end{tikzpicture}        
+        \]
+        For $T \in E$, $A_{i,1}=0$ for all $i$ and therefore,
+        \[
+            \mathcal{M}(T)=\sum_{i=1}^n \sum_{j=2}^m A_{i,j} \mathcal{M}_{i,j}   
+        \] 
+        i.e. the basis of $\mathcal{M}(T)$ consists of $(m-1)\times n$ matrices and therefore,
+        \[
+        \dim E = (m-1) n = (\dim V -1 ) \dim W    
+        \]
+    }
+
+If $v \in V$ and $U$ is a subspace of $V$ the affine subset,
+\[
+v+U = \{v+u \, : \, u \in U \}    
+\]
+is said to be parallel  to $U$. Two affine subsets parallel to $U$ are either equal or disjoint.
+To show that this is the case start with the assumption that $v+U \subset w+U$ and $w+U \not\subset v+U$.
+Then there exists $u \in U$ s.t. $v+u \in w+U$; this means we can find $u' \in U$ s.t. $v+u=w+u'$. 
+Rearanging terms we have $v-w+u=u'$; since $U$ is a subspace of $V$ this is only possible if $v-w \in U$
+since $U$ is closed under addition. 
+
+Next we want to show that there exists $u \in U$ s.t. $w+u \not\in v+U$. This means we cannot find any
+$u' \in U$ s.t. $w+u = v+u'$; but this is not the case since $w+u=v+(w-v)+u$ and since $U$ is a subspace 
+it is closed under scalar multiplication and addition, therefore, since $w-v, u \in U$, we have found
+$u'=(w-v)+u$ so that $w+u = v+u'$. So $w+u \subset v+U$ and $v+U = w+U$.
+
+For the disjoint case, start with $v+u \not\in w+U$; there is no $u' \in U$ s.t. $v+u=w+u'$. Lets assume
+that $w+u \in v+U$, i.e. there is $u' \in U$ s.t. $w+u=v+u'$; since $U$ is a subspace, this means that
+$w-v \in U$. If this is the case $v+u = w + (v-w)+u = w+u'$ and therefore $v+U \in w+U$ which contradicts our 
+assumption. Therefore $v+U \cap w+U = \varnothing$.
+
 \end{document}
